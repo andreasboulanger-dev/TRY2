@@ -1,14 +1,6 @@
 (() => {
   "use strict";
 
-  const titles = {
-    home: "Home",
-    search: "Search",
-    library: "Library",
-    profile: "Profile",
-    compose: "New",
-  };
-
   const tabItems = document.querySelectorAll(".tab-item");
   const tabGroup = document.querySelector(".tab-group");
 
@@ -20,7 +12,6 @@
   // it already handled the selection so the following click is a no-op.
   let suppressNextClick = false;
   const screens = document.querySelectorAll(".screen");
-  const pageTitle = document.getElementById("pageTitle");
   const content = document.getElementById("content");
   const indicator = document.getElementById("tabIndicator");
 
@@ -47,10 +38,6 @@
     screens.forEach((screen) => {
       screen.hidden = screen.dataset.screen !== name;
     });
-
-    if (pageTitle && titles[name]) {
-      pageTitle.textContent = titles[name];
-    }
 
     if (target && target.closest(".tab-group")) {
       moveIndicator(target);

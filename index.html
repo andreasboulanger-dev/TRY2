@@ -65,25 +65,14 @@
 <body>
 
 <!-- Status bar area is intentionally NOT covered by a solid spacer here —
-     .nav-header (now inside #content below) starts at the true top edge
-     with padding-top: var(--safe-top), so it bleeds under the status bar
-     on its own and scrolls away with the rest of the page. A solid spacer
-     here would paint over that and defeat the edge-to-edge look. -->
+     #content below carries its own padding-top: var(--safe-top), so it
+     bleeds under the status bar on its own. A solid spacer here would
+     paint over that and defeat the edge-to-edge look. -->
 
 <div id="app">
 
   <!-- ============ Scrollable content ============ -->
   <main class="content" id="content">
-
-    <!-- ============ Large Title header (HIG: large titles) ============
-         Lives INSIDE the scroll container now, not fixed above it — it
-         scrolls away with the rest of the page instead of staying pinned
-         at the top. -->
-    <header class="nav-header" id="navHeader">
-      <div class="nav-header-inner">
-        <h1 class="large-title" id="pageTitle">Home</h1>
-      </div>
-    </header>
 
     <section class="screen" data-screen="home" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
       <div class="card">

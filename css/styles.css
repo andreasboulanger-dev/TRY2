@@ -144,32 +144,6 @@ a { color: var(--color-accent); text-decoration: none; }
 }
 
 /* =========================================================================
-   Large title header (HIG large title navigation bar)
-   ========================================================================= */
-
-.nav-header {
-  /* Now lives inline inside the scrollable #content, so it scrolls away
-     with the rest of the page instead of staying pinned at the top. The
-     backdrop blur and the scroll-triggered title-collapse from the old
-     pinned version are gone — there's nothing sitting beneath it to blur
-     once it's just another block in the flow, and a title that's about to
-     scroll offscreen anyway doesn't need to shrink first. */
-  padding-top: var(--safe-top);
-}
-
-.nav-header-inner {
-  padding: 6px 16px 10px;
-}
-
-.large-title {
-  font-size: 34px;
-  line-height: 41px;
-  font-weight: 700;
-  letter-spacing: 0.37px;
-  margin: 0;
-}
-
-/* =========================================================================
    Content
    ========================================================================= */
 
@@ -187,7 +161,7 @@ a { color: var(--color-accent); text-decoration: none; }
   overscroll-behavior-y: contain; /* .content is the real scroll container now — kill its rubber-band here instead of on body */
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y; /* vertical scroll only — no pinch-zoom (touch-action isn't inherited from html/body) */
-  padding: 8px 16px calc(var(--tab-bar-height) + var(--tab-bar-margin) * 2 + var(--safe-bottom) + 24px);
+  padding: calc(8px + var(--safe-top)) 16px calc(var(--tab-bar-height) + var(--tab-bar-margin) * 2 + var(--safe-bottom) + 24px);
   padding-left: calc(16px + var(--safe-left));
   padding-right: calc(16px + var(--safe-right));
 }
@@ -454,7 +428,7 @@ a { color: var(--color-accent); text-decoration: none; }
    ========================================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .screen, .tab-item, .large-title, .material-symbols-rounded { animation: none !important; transition: none !important; }
+  .screen, .tab-item, .material-symbols-rounded { animation: none !important; transition: none !important; }
 }
 
 /* Respect keyboard focus visibility even though we disable tap highlight */
