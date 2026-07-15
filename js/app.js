@@ -21,7 +21,6 @@
   let suppressNextClick = false;
   const screens = document.querySelectorAll(".screen");
   const pageTitle = document.getElementById("pageTitle");
-  const navHeader = document.getElementById("navHeader");
   const content = document.getElementById("content");
   const indicator = document.getElementById("tabIndicator");
 
@@ -193,18 +192,6 @@
   window.addEventListener("load", () => {
     const active = document.querySelector(".tab-group .tab-item[aria-selected='true']");
     if (active) moveIndicator(active);
-  });
-
-  // Collapse the large title into an inline title once the user scrolls,
-  // matching UINavigationController's large-title -> standard-title behavior
-  let ticking = false;
-  content.addEventListener("scroll", () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      navHeader.classList.toggle("scrolled", content.scrollTop > 8);
-      ticking = false;
-    });
   });
 
   // --- Diagnostics shown on the Home screen ---
