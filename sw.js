@@ -1,6 +1,6 @@
 // Bump this on every deploy that changes any cached file, so old clients
 // pick up the new shell instead of serving stale assets forever.
-const CACHE_NAME = "shell-cache-v16";
+const CACHE_NAME = "shell-cache-v17";
 
 const APP_SHELL = [
   "./",

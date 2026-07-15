@@ -212,6 +212,12 @@
   const swValue = document.getElementById("swValue");
   const safeTopValue = document.getElementById("safeTopValue");
   const safeBottomValue = document.getElementById("safeBottomValue");
+  const screenSizeValue = document.getElementById("screenSizeValue");
+  const innerSizeValue = document.getElementById("innerSizeValue");
+  const visualVpValue = document.getElementById("visualVpValue");
+  const htmlRectValue = document.getElementById("htmlRectValue");
+  const appRectValue = document.getElementById("appRectValue");
+  const dprValue = document.getElementById("dprValue");
 
   function isStandalone() {
     return (
@@ -234,6 +240,48 @@
     safeTopValue.textContent = cs.paddingTop || "0px";
     safeBottomValue.textContent = cs.paddingBottom || "0px";
     probe.remove();
+  }
+
+  // These four numbers are the ones that actually distinguish "the
+  // WKWebView frame iOS handed us is smaller than the physical screen"
+  // (screenSize > innerSize, and appRect is short even though its CSS
+  // says min-height: 100dvh) from "the frame is full size but something
+  // in our own layout isn't filling it" (screenSize === innerSize, but
+  // appRect is still short). Re-measure on resize so orientation/rotation
+  // and any late-arriving safe-area updates are reflected too.
+  function updateSizeDiagnostics() {
+    if (screenSizeValue) {
+      screenSizeValue.textContent = `${window.screen.width} × ${window.screen.height}`;
+    }
+    if (innerSizeValue) {
+      innerSizeValue.textContent = `${window.innerWidth} × ${window.innerHeight}`;
+    }
+    if (visualVpValue) {
+      visualVpValue.textContent = window.visualViewport
+        ? `${Math.round(window.visualViewport.width)} × ${Math.round(window.visualViewport.height)} (offset ${Math.round(window.visualViewport.offsetTop)})`
+        : "Unsupported";
+    }
+    if (htmlRectValue) {
+      const r = document.documentElement.getBoundingClientRect();
+      htmlRectValue.textContent = `${Math.round(r.width)} × ${Math.round(r.height)}`;
+    }
+    if (appRectValue) {
+      const appEl = document.getElementById("app");
+      if (appEl) {
+        const r = appEl.getBoundingClientRect();
+        appRectValue.textContent = `${Math.round(r.width)} × ${Math.round(r.height)} (top ${Math.round(r.top)}, bottom ${Math.round(r.bottom)})`;
+      }
+    }
+    if (dprValue) {
+      dprValue.textContent = String(window.devicePixelRatio);
+    }
+  }
+
+  updateSizeDiagnostics();
+  window.addEventListener("resize", updateSizeDiagnostics);
+  window.addEventListener("orientationchange", updateSizeDiagnostics);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", updateSizeDiagnostics);
   }
 
   // --- Service worker registration (app-shell caching for offline + installability) ---
