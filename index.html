@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+
+<!-- Viewport: viewport-fit=cover is required so env(safe-area-inset-*) resolves
+     on notch/Dynamic Island/home-indicator devices -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+<title>Shell</title>
+<meta name="description" content="An iOS-style Progressive Web App shell." />
+
+<!-- ============ Material 3 typography & iconography ============
+     Icons and typeface use Google's current Material 3 systems:
+     Material Symbols (the variable-font icon set that replaced Material
+     Icons) and Roboto Flex (the variable font that is M3's default
+     typeface as of the Material Design 3 typography spec). Everything
+     ELSE — layout, chrome, gestures, safe areas — stays iOS HIG; this
+     only swaps the type/icon assets those elements render with. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,home,library_books,person,search&display=block" rel="stylesheet" />
+
+<!-- ============ PWA manifest ============ -->
+<link rel="manifest" href="manifest.json" />
+
+<!-- ============ iOS "Add to Home Screen" support ============
+     Safari on iOS ignores the manifest for most of this — these meta tags
+     are what actually control standalone mode, status bar, icon & title. -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Shell" />
+<!-- black-translucent lets our content draw under the status bar so the
+     glass nav / large title can extend into the safe area like native apps -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+<!-- ============ iOS launch screens ============
+     Safari on iOS has no splash-screen API — it picks the first
+     apple-touch-startup-image whose media query matches the device's
+     exact CSS width/height + pixel ratio, and shows it while the app
+     boots from the home screen. One entry per supported device,
+     portrait only (manifest.json locks orientation to portrait). -->
+<link rel="apple-touch-startup-image" href="splash/iphone-se.png"
+      media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-8.png"
+      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-8-plus.png"
+      media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-x.png"
+      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-xr.png"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-xs-max.png"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-12.png"
+      media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-12-pro-max.png"
+      media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-14-pro.png"
+      media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-14-pro-max.png"
+      media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-9.7.png"
+      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-pro-10.5.png"
+      media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-pro-11.png"
+      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-pro-12.9.png"
+      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+
+<!-- Theme colors: separate values for light/dark so the browser chrome
+     (and iOS status bar background behind the translucent style) matches -->
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f2f7" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
+
+<!-- Disable auto-detection so phone numbers / dates don't get underlined -->
+<meta name="format-detection" content="telephone=no" />
+
+
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ============ Status bar spacer ============
+     Fills the safe-area behind the translucent status bar with the same
+     background as the page, like native apps do. -->
+<div class="status-bar-spacer" aria-hidden="true"></div>
+
+<div id="app">
+
+  <!-- ============ Large Title header (HIG: large titles) ============ -->
+  <header class="nav-header" id="navHeader">
+    <div class="nav-header-inner">
+      <h1 class="large-title" id="pageTitle">Home</h1>
+    </div>
+  </header>
+
+  <!-- ============ Scrollable content ============ -->
+  <main class="content" id="content">
+
+    <section class="screen" data-screen="home" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
+      <div class="card">
+        <p class="card-title">Welcome</p>
+        <p class="card-body">This is a blank iOS-style PWA shell. Swap this content for your app — the chrome (nav bar, tab bar, safe areas) is already wired up.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Section one</p>
+        <p class="card-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Section two</p>
+        <p class="card-body">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Section three</p>
+        <p class="card-body">Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.</p>
+      </div>
+
+      <div class="list">
+        <div class="list-row"><span class="list-label">Row item</span><span class="list-value">Detail</span></div>
+        <div class="list-row"><span class="list-label">Row item</span><span class="list-value">Detail</span></div>
+        <div class="list-row"><span class="list-label">Row item</span><span class="list-value">Detail</span></div>
+        <div class="list-row"><span class="list-label">Row item</span><span class="list-value">Detail</span></div>
+        <div class="list-row"><span class="list-label">Row item</span><span class="list-value">Detail</span></div>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Section four</p>
+        <p class="card-body">Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis consectetur purus sit amet fermentum. Etiam porta sem malesuada magna mollis euismod.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Section five</p>
+        <p class="card-body">Vestibulum id ligula porta felis euismod semper. Maecenas faucibus mollis interdum. Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Section six</p>
+        <p class="card-body">Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+      </div>
+
+      <div class="list">
+        <div class="list-row">
+          <span class="list-label">Standalone mode</span>
+          <span class="list-value" id="standaloneValue">—</span>
+        </div>
+        <div class="list-row">
+          <span class="list-label">Service worker</span>
+          <span class="list-value" id="swValue">—</span>
+        </div>
+        <div class="list-row">
+          <span class="list-label">Safe area (top)</span>
+          <span class="list-value" id="safeTopValue">—</span>
+        </div>
+        <div class="list-row">
+          <span class="list-label">Safe area (bottom)</span>
+          <span class="list-value" id="safeBottomValue">—</span>
+        </div>
+      </div>
+
+      <div class="card gradient-card">
+        <p class="card-title" style="color: #fff;">Scroll to here</p>
+        <p class="card-body" style="color: rgba(255,255,255,0.85);">This banner sits right under the tab bar so you can actually see the glass refract color instead of just a flat page background.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Section seven</p>
+        <p class="card-body">Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Section eight</p>
+        <p class="card-body">Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="search" id="panel-search" role="tabpanel" aria-labelledby="tab-search" hidden>
+      <div class="search-field-wrap">
+        <div class="search-field">
+          <span class="material-symbols-rounded icon-16" aria-hidden="true">search</span>
+          <input type="search" placeholder="Search" aria-label="Search" />
+        </div>
+      </div>
+      <div class="card"><p class="card-body">Search results go here.</p></div>
+    </section>
+
+    <section class="screen" data-screen="library" id="panel-library" role="tabpanel" aria-labelledby="tab-library" hidden>
+      <div class="card"><p class="card-body">Library / saved items go here.</p></div>
+    </section>
+
+    <section class="screen" data-screen="profile" id="panel-profile" role="tabpanel" aria-labelledby="tab-profile" hidden>
+      <div class="card"><p class="card-body">Profile / account screen goes here.</p></div>
+    </section>
+
+    <section class="screen" data-screen="compose" id="panel-compose" role="tabpanel" aria-labelledby="tab-compose" hidden>
+      <div class="card"><p class="card-body">This is the detached action screen — wire it to whatever your "compose" or primary action should do.</p></div>
+    </section>
+
+  </main>
+
+  <!-- ============ Bottom tab bar — iOS 26/27 "Liquid Glass" style ============
+       4 grouped items in one glass capsule + 1 detached glass capsule on the right -->
+  <!-- role="tablist" lives on the outer nav so it encloses BOTH capsules —
+       putting it only on .tab-group left the detached 5th action's
+       role="tab" sitting outside any tablist, which is an invalid ARIA
+       parent/child relationship. -->
+  <nav class="tab-bar" id="tabBar" aria-label="Main" role="tablist">
+    <div class="glass-capsule tab-group">
+      <span class="glass-sheen" aria-hidden="true"></span>
+      <span class="tab-indicator" id="tabIndicator" aria-hidden="true"></span>
+      <button class="tab-item" id="tab-home" data-tab="home" role="tab" aria-selected="true" aria-controls="panel-home" aria-label="Home">
+        <span class="tab-icon">
+          <span class="material-symbols-rounded" aria-hidden="true">home</span>
+        </span>
+        <span class="tab-label">Home</span>
+      </button>
+
+      <button class="tab-item" id="tab-search" data-tab="search" role="tab" aria-selected="false" aria-controls="panel-search" aria-label="Search">
+        <span class="tab-icon">
+          <span class="material-symbols-rounded" aria-hidden="true">search</span>
+        </span>
+        <span class="tab-label">Search</span>
+      </button>
+
+      <button class="tab-item" id="tab-library" data-tab="library" role="tab" aria-selected="false" aria-controls="panel-library" aria-label="Library">
+        <span class="tab-icon">
+          <span class="material-symbols-rounded" aria-hidden="true">library_books</span>
+        </span>
+        <span class="tab-label">Library</span>
+      </button>
+
+      <button class="tab-item" id="tab-profile" data-tab="profile" role="tab" aria-selected="false" aria-controls="panel-profile" aria-label="Profile">
+        <span class="tab-icon">
+          <span class="material-symbols-rounded" aria-hidden="true">person</span>
+        </span>
+        <span class="tab-label">Profile</span>
+      </button>
+    </div>
+
+    <!-- Detached 5th action, separated from the group per the request -->
+    <button class="glass-capsule tab-item tab-item-detached" id="tab-compose" data-tab="compose" role="tab" aria-selected="false" aria-controls="panel-compose" aria-label="Compose">
+      <span class="glass-sheen" aria-hidden="true"></span>
+      <span class="tab-icon">
+        <span class="material-symbols-rounded" aria-hidden="true">add</span>
+      </span>
+    </button>
+  </nav>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

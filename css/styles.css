@@ -1,0 +1,471 @@
+/* =========================================================================
+   Shell — iOS HIG design tokens
+   ========================================================================= */
+
+:root {
+  /* --- System colors (light) --- */
+  --color-accent: #007AFF;          /* systemBlue */
+  --color-tab-accent: #34C759;      /* systemGreen — active tab bar icon + pill */
+  --color-bg-primary: #F2F2F7;      /* systemGroupedBackground */
+  --color-bg-secondary: #FFFFFF;    /* secondarySystemGroupedBackground */
+  --color-bg-elevated: #FFFFFF;
+  --color-label-primary: #000000;
+  --color-label-secondary: rgba(60, 60, 67, 0.6);
+  --color-label-tertiary: rgba(60, 60, 67, 0.3);
+  --color-separator: rgba(60, 60, 67, 0.29);
+  --color-fill-secondary: rgba(120, 120, 128, 0.16);
+
+  /* --- Liquid Glass surface (light) ---
+     iOS 26/27's material is closer to clear, refractive lensing than the
+     older "frosted" blur: less opacity, more saturation lift, a bright
+     specular rim along the top edge, and a soft directional shadow
+     underneath for elevation off the content behind it. */
+  --glass-bg: rgba(255, 255, 255, 0.38);
+  --glass-bg-strong: rgba(255, 255, 255, 0.58);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-rim-top: rgba(255, 255, 255, 0.95);
+  --glass-rim-bottom: rgba(255, 255, 255, 0.15);
+  --glass-sheen: rgba(255, 255, 255, 0.55);
+  --glass-shadow: rgba(0, 0, 0, 0.18);
+  --glass-blur: 8px;
+  --glass-saturate: 200%;
+
+  /* --- Layout --- */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  --tab-bar-height: 52px;
+  --tab-bar-margin: 16px;
+  --radius-capsule: 28px;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-accent: #0A84FF;
+    --color-tab-accent: #30D158; /* systemGreen (dark) */
+    --color-bg-primary: #000000;
+    --color-bg-secondary: #1C1C1E;
+    --color-bg-elevated: #2C2C2E;
+    --color-label-primary: #FFFFFF;
+    --color-label-secondary: rgba(235, 235, 245, 0.6);
+    --color-label-tertiary: rgba(235, 235, 245, 0.3);
+    --color-separator: rgba(84, 84, 88, 0.6);
+    --color-fill-secondary: rgba(120, 120, 128, 0.32);
+
+    --glass-bg: rgba(30, 30, 32, 0.5);
+    --glass-bg-strong: rgba(44, 44, 46, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-rim-top: rgba(255, 255, 255, 0.32);
+    --glass-rim-bottom: rgba(255, 255, 255, 0.05);
+    --glass-sheen: rgba(255, 255, 255, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.65);
+    --glass-blur: 10px;
+  }
+}
+
+/* =========================================================================
+   Reset
+   ========================================================================= */
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  height: 100dvh; /* accounts for iOS Safari's dynamic toolbar; falls back to 100% */
+  margin: 0;
+  overflow: hidden; /* body isn't the scroll container — #content is (see below) */
+  overscroll-behavior-y: none; /* kill the rubber-band revealing white page bg */
+}
+
+body {
+  font-family: "Roboto Flex", -apple-system, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  font-optical-sizing: auto; /* let Roboto Flex's opsz axis track font-size automatically */
+  background: var(--color-bg-primary);
+  color: var(--color-label-primary);
+  -webkit-font-smoothing: antialiased;
+  user-select: none; /* chrome (nav, tab bar) shouldn't feel selectable */
+}
+
+/* ...but real content the user might want to copy should stay selectable */
+.card-title,
+.card-body,
+.list-label,
+.list-value {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+input { font-family: inherit; }
+
+a { color: var(--color-accent); text-decoration: none; }
+
+/* =========================================================================
+   Material Symbols — required boilerplate for the icon font to render
+   ligature text ("home", "search", ...) as glyphs instead of literal
+   words, plus the variable-font axis defaults (outline style, regular
+   weight). The FILL axis is what lets the tab bar switch an icon from
+   outline to filled on selection below, matching the iOS HIG convention
+   for selected vs. unselected tab bar icons — just realized with Material
+   Symbols instead of hand-drawn outline/filled SVG pairs.
+   ========================================================================= */
+
+.material-symbols-rounded {
+  font-family: "Material Symbols Rounded";
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "liga";
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  transition: font-variation-settings 0.2s ease;
+}
+
+/* =========================================================================
+   Status bar spacer — paints the safe-area behind the translucent iOS
+   status bar so content doesn't show through as a hard edge
+   ========================================================================= */
+
+.status-bar-spacer {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--safe-top);
+  background: var(--color-bg-primary);
+  z-index: 100;
+}
+
+/* =========================================================================
+   Large title header (HIG large title navigation bar)
+   ========================================================================= */
+
+.nav-header {
+  position: relative; /* no longer sticky-to-document: #app is now a flex
+    column where .content does its own internal scrolling, so nav-header
+    sits above that scroll region and never needs to move. */
+  flex-shrink: 0;
+  z-index: 50;
+  padding-top: var(--safe-top);
+  background: color-mix(in srgb, var(--color-bg-primary) 88%, transparent);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 0.5px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.nav-header.scrolled {
+  border-bottom-color: var(--color-separator);
+}
+
+.nav-header-inner {
+  padding: 6px 16px 10px;
+}
+
+.large-title {
+  font-size: 34px;
+  line-height: 41px;
+  font-weight: 700;
+  letter-spacing: 0.37px;
+  margin: 0;
+  transition: font-size 0.2s ease, transform 0.2s ease;
+}
+
+.nav-header.scrolled .large-title {
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 600;
+  transform: translateY(2px);
+}
+
+/* =========================================================================
+   Content
+   ========================================================================= */
+
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1 1 auto;
+  min-height: 0; /* let a flex child actually shrink/scroll instead of growing to fit content */
+  overflow-y: auto;
+  overscroll-behavior-y: contain; /* .content is the real scroll container now — kill its rubber-band here instead of on body */
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 16px calc(var(--tab-bar-height) + var(--tab-bar-margin) * 2 + var(--safe-bottom) + 24px);
+  padding-left: calc(16px + var(--safe-left));
+  padding-right: calc(16px + var(--safe-right));
+}
+
+.screen { animation: fade-in 0.18s ease; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Card --- */
+
+.card {
+  background: var(--color-bg-secondary);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.card-body {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--color-label-secondary);
+  margin: 0;
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, #FF6B6B 0%, #7C4DFF 50%, #0A84FF 100%);
+}
+
+/* --- Grouped list (Settings-style rows) --- */
+
+.list {
+  background: var(--color-bg-secondary);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 0.5px solid var(--color-separator);
+  font-size: 15px;
+}
+
+.list-row:last-child { border-bottom: none; }
+
+.list-label { color: var(--color-label-primary); }
+.list-value { color: var(--color-label-secondary); }
+
+/* --- Search field --- */
+
+.search-field-wrap { padding: 4px 0 16px; }
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-fill-secondary);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--color-label-secondary);
+}
+
+.search-field input {
+  border: none;
+  background: none;
+  outline: none;
+  flex: 1;
+  font-size: 17px;
+  color: var(--color-label-primary);
+}
+
+.icon-16 { font-size: 18px; color: var(--color-label-secondary); flex-shrink: 0; }
+
+/* =========================================================================
+   Bottom tab bar — Liquid Glass (iOS 26/27 style)
+
+   Layout: one glass capsule holding 4 tabs (grouped), plus a second,
+   smaller glass capsule floating separately on the right for the 5th,
+   "detached" action — matching the iOS 26 pattern used in Photos/Music
+   where a primary action breaks off from the main tab group.
+   ========================================================================= */
+
+.tab-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 0 var(--tab-bar-margin) calc(var(--tab-bar-margin) + var(--safe-bottom));
+  padding-left: calc(var(--tab-bar-margin) + var(--safe-left));
+  padding-right: calc(var(--tab-bar-margin) + var(--safe-right));
+  pointer-events: none; /* re-enabled on the glass children so gaps are click-through */
+}
+
+.glass-capsule {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-radius: var(--radius-capsule);
+  border: 0.5px solid var(--glass-border);
+  /* layered shadow = the material's elevation off the content behind it:
+     a tight contact shadow + a soft diffused one, plus an inset rim that
+     goes bright at the top (catching light) and dim at the bottom */
+  box-shadow:
+    inset 0 1px 0.5px var(--glass-rim-top),
+    inset 0 -1px 6px var(--glass-rim-bottom),
+    0 1px 3px var(--glass-shadow),
+    0 10px 30px var(--glass-shadow);
+  pointer-events: auto;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Note: earlier drafts referenced an SVG feDisplacementMap filter from
+   backdrop-filter to fake refraction. Browser support for that is too
+   inconsistent to rely on — it silently fails in most engines and just
+   leaves the flat blur() below, so it's been dropped in favor of a
+   lighter, crisper blur plus the specular rim/sheen for the glass read. */
+
+/* Diagonal sheen sweeping the glass surface, like light catching a curved
+   pane — a static highlight rather than the blur trying to fake shine */
+.glass-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    115deg,
+    var(--glass-sheen) 0%,
+    transparent 22%,
+    transparent 78%,
+    var(--glass-sheen) 100%
+  );
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.tab-group {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  height: var(--tab-bar-height);
+  padding: 4px;
+  touch-action: none;
+}
+
+/* Sliding morph pill — mirrors iOS 26/27's behavior where the selected
+   tab's background morphs and travels rather than each tab toggling its
+   own static highlight */
+.tab-indicator {
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: 0;
+  border-radius: calc(var(--radius-capsule) - 4px);
+  background: var(--color-fill-secondary);
+  box-shadow: inset 0 0 0 1px var(--glass-border);
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.tab-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex: 1;
+  border-radius: calc(var(--radius-capsule) - 4px);
+  color: var(--color-label-secondary);
+  transition: color 0.18s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tab-item:active { transform: scale(0.9); }
+
+.tab-item[aria-selected="true"] {
+  color: var(--color-tab-accent);
+}
+
+.tab-icon {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-icon .material-symbols-rounded { font-size: 23px; }
+
+/* iOS HIG: selected tab bar icons render filled, unselected render
+   outlined. Realized here with Material Symbols' FILL axis instead of
+   swapping SVGs. */
+.tab-item[aria-selected="true"] .material-symbols-rounded {
+  font-variation-settings: "FILL" 1, "wght" 500, "GRAD" 0, "opsz" 24;
+}
+
+.tab-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* --- Detached 5th action --- */
+
+.tab-item-detached {
+  width: var(--tab-bar-height);
+  height: var(--tab-bar-height);
+  flex: 0 0 auto;
+  border-radius: 50%;
+  color: var(--color-accent);
+}
+
+.tab-item-detached .tab-icon { width: 100%; height: 100%; }
+.tab-item-detached .tab-icon .material-symbols-rounded { font-size: 21px; }
+
+.tab-item-detached[aria-selected="true"] {
+  background: color-mix(in srgb, var(--color-accent) 20%, var(--glass-bg-strong));
+}
+.tab-item-detached[aria-selected="true"] .tab-icon {
+  color: var(--color-accent);
+}
+
+/* =========================================================================
+   Reduced motion
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .screen, .tab-item, .large-title, .material-symbols-rounded { animation: none !important; transition: none !important; }
+}
+
+/* Respect keyboard focus visibility even though we disable tap highlight */
+.tab-item:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
