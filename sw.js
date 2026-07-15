@@ -1,6 +1,6 @@
 // Bump this on every deploy that changes any cached file, so old clients
 // pick up the new shell instead of serving stale assets forever.
-const CACHE_NAME = "shell-cache-v9";
+const CACHE_NAME = "shell-cache-v11";
 
 const APP_SHELL = [
   "./",
@@ -21,6 +21,8 @@ const APP_SHELL = [
   "./splash/iphone-12-pro-max.png",
   "./splash/iphone-14-pro.png",
   "./splash/iphone-14-pro-max.png",
+  "./splash/iphone-16-pro.png",
+  "./splash/iphone-16-pro-max.png",
   "./splash/ipad-9.7.png",
   "./splash/ipad-pro-10.5.png",
   "./splash/ipad-pro-11.png",

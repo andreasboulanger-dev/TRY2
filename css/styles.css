@@ -142,19 +142,6 @@ a { color: var(--color-accent); text-decoration: none; }
 }
 
 /* =========================================================================
-   Status bar spacer — paints the safe-area behind the translucent iOS
-   status bar so content doesn't show through as a hard edge
-   ========================================================================= */
-
-.status-bar-spacer {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: var(--safe-top);
-  background: var(--color-bg-primary);
-  z-index: 100;
-}
-
-/* =========================================================================
    Large title header (HIG large title navigation bar)
    ========================================================================= */
 

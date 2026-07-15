@@ -61,6 +61,15 @@
       media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
 <link rel="apple-touch-startup-image" href="splash/iphone-14-pro-max.png"
       media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<!-- iPhone 16 Pro / 16 Pro Max introduced new physical sizes that don't
+     match any earlier device-width/device-height pair above, so without
+     these two entries iOS finds no matching startup image on those
+     phones and falls back to a shrunken, non-fullscreen launch — which
+     is also why the installed app doesn't extend edge-to-edge afterward. -->
+<link rel="apple-touch-startup-image" href="splash/iphone-16-pro.png"
+      media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+<link rel="apple-touch-startup-image" href="splash/iphone-16-pro-max.png"
+      media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
 <link rel="apple-touch-startup-image" href="splash/ipad-9.7.png"
       media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
 <link rel="apple-touch-startup-image" href="splash/ipad-pro-10.5.png"
@@ -83,10 +92,11 @@
 </head>
 <body>
 
-<!-- ============ Status bar spacer ============
-     Fills the safe-area behind the translucent status bar with the same
-     background as the page, like native apps do. -->
-<div class="status-bar-spacer" aria-hidden="true"></div>
+<!-- Status bar area is intentionally NOT covered by a solid spacer here —
+     .nav-header below already starts at the true top edge with
+     padding-top: var(--safe-top) and its own translucent blurred
+     background, so it bleeds under the status bar on its own. A solid
+     spacer here would paint over that and defeat the edge-to-edge look. -->
 
 <div id="app">
 
