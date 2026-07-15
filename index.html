@@ -9,8 +9,13 @@
      its own it's necessary, not sufficient — see the
      apple-mobile-web-app-status-bar-style tag below, which is what
      actually tells iOS to draw content under the status bar rather than
-     push it down. -->
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+     push it down.
+     maximum-scale=1 + user-scalable=no stop pinch-to-zoom and the
+     double-tap-to-zoom gesture. iOS Safari has ignored user-scalable=no
+     for regular in-browser tabs since iOS 10 (accessibility requirement),
+     but it's still honored inside an installed standalone PWA — the JS
+     gesture-blocking in app.js is the backstop for the cases it isn't. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 
 <title>Shell</title>
 <meta name="description" content="An iOS-style Progressive Web App shell." />
@@ -206,6 +211,12 @@
 
   <!-- ============ Bottom tab bar — iOS 26/27 "Liquid Glass" style ============
        4 grouped items in one glass capsule + 1 detached glass capsule on the right -->
+  <!-- Scrim: sits BEHIND the floating capsules and covers the full nav
+       region (capsule + margin + safe-bottom), fading from transparent to
+       the page background. Without this, content scrolling underneath the
+       capsules' surrounding gap has nothing dimming/blurring it and shows
+       through completely undimmed — this is what fades it out instead. -->
+  <div class="tab-bar-scrim" aria-hidden="true"></div>
   <!-- role="tablist" lives on the outer nav so it encloses BOTH capsules —
        putting it only on .tab-group left the detached 5th action's
        role="tab" sitting outside any tablist, which is an invalid ARIA

@@ -284,6 +284,29 @@
     window.visualViewport.addEventListener("resize", updateSizeDiagnostics);
   }
 
+  // --- Disable pinch-zoom / double-tap-zoom ---
+  // The viewport meta (maximum-scale=1, user-scalable=no) and the CSS
+  // touch-action rules handle most of this, but Safari also fires its own
+  // non-standard gesturestart/gesturechange/gestureend events for pinch
+  // gestures — those aren't governed by touch-action at all, so block them
+  // directly. document-level, not window, since that's what Safari targets.
+  ["gesturestart", "gesturechange", "gestureend"].forEach((type) => {
+    document.addEventListener(type, (e) => e.preventDefault());
+  });
+
+  // Backstop for double-tap-to-zoom: if two touchend events land inside
+  // iOS's ~300ms double-tap window, swallow the second one.
+  let lastTouchEnd = 0;
+  document.addEventListener(
+    "touchend",
+    (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) e.preventDefault();
+      lastTouchEnd = now;
+    },
+    { passive: false }
+  );
+
   // --- Service worker registration (app-shell caching for offline + installability) ---
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
