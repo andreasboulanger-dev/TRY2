@@ -46,50 +46,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 
-<!-- ============ iOS launch screens ============
-     Safari on iOS has no splash-screen API — it picks the first
-     apple-touch-startup-image whose media query matches the device's
-     exact CSS width/height + pixel ratio, and shows it while the app
-     boots from the home screen. One entry per supported device,
-     portrait only (manifest.json locks orientation to portrait). -->
-<link rel="apple-touch-startup-image" href="splash/iphone-se.png"
-      media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-8.png"
-      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-8-plus.png"
-      media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-x.png"
-      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-xr.png"
-      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-xs-max.png"
-      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-12.png"
-      media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-12-pro-max.png"
-      media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-14-pro.png"
-      media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-14-pro-max.png"
-      media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-<!-- iPhone 16 Pro / 16 Pro Max introduced new physical sizes that don't
-     match any earlier device-width/device-height pair above, so without
-     these two entries iOS finds no matching startup image on those
-     phones and falls back to a shrunken, non-fullscreen launch — which
-     is also why the installed app doesn't extend edge-to-edge afterward. -->
-<link rel="apple-touch-startup-image" href="splash/iphone-16-pro.png"
-      media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/iphone-16-pro-max.png"
-      media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/ipad-9.7.png"
-      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/ipad-pro-10.5.png"
-      media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/ipad-pro-11.png"
-      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-<link rel="apple-touch-startup-image" href="splash/ipad-pro-12.9.png"
-      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-
 <!-- Theme colors: separate values for light/dark so the browser chrome
      (and iOS status bar background behind the translucent style) matches -->
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f2f7" />

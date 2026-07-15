@@ -1,6 +1,6 @@
 // Bump this on every deploy that changes any cached file, so old clients
 // pick up the new shell instead of serving stale assets forever.
-const CACHE_NAME = "shell-cache-v18";
+const CACHE_NAME = "shell-cache-v19";
 
 const APP_SHELL = [
   "./",
@@ -11,22 +11,6 @@ const APP_SHELL = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/apple-touch-icon.png",
-  "./splash/iphone-se.png",
-  "./splash/iphone-8.png",
-  "./splash/iphone-8-plus.png",
-  "./splash/iphone-x.png",
-  "./splash/iphone-xr.png",
-  "./splash/iphone-xs-max.png",
-  "./splash/iphone-12.png",
-  "./splash/iphone-12-pro-max.png",
-  "./splash/iphone-14-pro.png",
-  "./splash/iphone-14-pro-max.png",
-  "./splash/iphone-16-pro.png",
-  "./splash/iphone-16-pro-max.png",
-  "./splash/ipad-9.7.png",
-  "./splash/ipad-pro-10.5.png",
-  "./splash/ipad-pro-11.png",
-  "./splash/ipad-pro-12.9.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -34,9 +18,8 @@ self.addEventListener("install", (event) => {
     caches.open(CACHE_NAME).then((cache) =>
       // cache.addAll() is all-or-nothing: if a single URL 404s, the whole
       // install rejects and the SW never activates. Cache each entry
-      // independently instead, so one missing/renamed asset (e.g. a splash
-      // image that didn't ship) doesn't break offline support / installability
-      // for everything else.
+      // independently instead, so one missing/renamed asset doesn't break
+      // offline support / installability for everything else.
       Promise.all(
         APP_SHELL.map((url) =>
           cache.add(url).catch((err) => {
