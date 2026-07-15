@@ -3,8 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 
-<!-- Viewport: viewport-fit=cover is required so env(safe-area-inset-*) resolves
-     on notch/Dynamic Island/home-indicator devices -->
+<!-- Viewport: viewport-fit=cover is what makes env(safe-area-inset-*)
+     resolve to real values on notch/Dynamic Island/home-indicator
+     devices instead of 0px. This is required for edge-to-edge, but on
+     its own it's necessary, not sufficient — see the
+     apple-mobile-web-app-status-bar-style tag below, which is what
+     actually tells iOS to draw content under the status bar rather than
+     push it down. -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
 <title>Shell</title>
@@ -30,8 +35,14 @@
      are what actually control standalone mode, status bar, icon & title. -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Shell" />
-<!-- black-translucent lets our content draw under the status bar so the
-     glass nav / large title can extend into the safe area like native apps -->
+<!-- iOS has no real Fullscreen API for home-screen web apps — the status
+     bar always shows, full stop. black-translucent is the only supported
+     mechanism for letting content draw underneath it instead of being
+     pushed down by an opaque bar. Combined with viewport-fit=cover above
+     (so env(safe-area-inset-top) resolves to a real value) and no opaque
+     spacer element sitting over the top edge, this is what actually
+     produces edge-to-edge on iOS — there isn't a way around needing this
+     tag specifically. -->
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 

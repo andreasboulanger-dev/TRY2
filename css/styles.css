@@ -74,8 +74,9 @@
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html, body {
+  width: 100%;
   height: 100%;
-  height: 100dvh; /* accounts for iOS Safari's dynamic toolbar; falls back to 100% */
+  min-height: 100dvh;
   margin: 0;
   overflow: hidden; /* body isn't the scroll container — #content is (see below) */
   overscroll-behavior-y: none; /* kill the rubber-band revealing white page bg */
@@ -188,7 +189,7 @@ a { color: var(--color-accent); text-decoration: none; }
    ========================================================================= */
 
 #app {
-  height: 100%;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
